@@ -7,10 +7,10 @@ jobs:
   build:
     docker:
       - image: circleci/ruby:2.7
-    working_directory: ~/rails-docker-kyt/src
+    working_directory: ~/rails-docker-kg/src
     steps:
       - checkout:
-          path: ~/rails-docker-kyt
+          path: ~/rails-docker-kg
       - ruby/install-deps
 
   test:
@@ -26,17 +26,17 @@ jobs:
       BUNDLE_RETRY: "3"
       APP_DATABASE_HOST: "127.0.0.1"
       RAILS_ENV: test
-    working_directory: ~/rails-docker-kyt/src
+    working_directory: ~/rails-docker-kg/src
     steps:
       - checkout:
-          path: ~/rails-docker-kyt
+          path: ~/rails-docker-kg
       - ruby/install-deps
       - run:
           name: Database setup
           command: bundle exec rails db:migrate
       - run:
           name: test
-          command: bundle exec rake test
+          command: bundle exec rails test
 
   deploy:
     docker:
@@ -57,7 +57,7 @@ jobs:
           command: heroku container:release web -a $HEROKU_APP_NAME
       - run:
           name: database setup
-          command: heroku run bundle exec rake db:migrate RAILS_ENV=production -a $HEROKU_APP_NAME
+          command: heroku run bundle exec rails db:migrate RAILS_ENV=production -a $HEROKU_APP_NAME
 
 workflows:
   version: 2
